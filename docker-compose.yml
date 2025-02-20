@@ -5,6 +5,8 @@ volumes:
   redis_4_data: {}
   redis_5_data: {}
   redis_6_data: {}
+  prometheus_data: {}
+  grafana_data5: {}
 
 services:
   redis_1:
@@ -79,24 +81,49 @@ services:
       redis_cluster_network:
         ipv4_address: 174.10.0.7
 
-  # Ephemeral container to create the Redis cluster connections.
-  # Once the setup is done, this container shuts down
-  # and the cluster can be used by the service app container
-  cluster_initiator:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    tty: true
-    depends_on:
-      - redis_1
-      - redis_2
-      - redis_3
-      - redis_4
-      - redis_5
-      - redis_6
+  redis_exporter:
+    image: oliver006/redis_exporter:latest
+    ports:
+      - "9121:9121"
+    command:
+      - '--redis.addr=redis://redis_1:6379'
+      - '--redis.addr=redis://redis_2:6379'
+      - '--redis.addr=redis://redis_3:6379'
+      - '--redis.addr=redis://redis_4:6379'
+      - '--redis.addr=redis://redis_5:6379'
+      - '--redis.addr=redis://redis_6:6379'
+      - '--is-cluster=true'
     networks:
       redis_cluster_network:
-        ipv4_address: 174.10.0.8
+        ipv4_address: 174.10.0.10
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      redis_cluster_network:
+        ipv4_address: 174.10.0.11
+
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - grafana_data5:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning  # Auto-configuration
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    depends_on:
+      - prometheus
+    networks:
+      redis_cluster_network:
+        ipv4_address: 174.10.0.12
 
   redis_commander:
     image: rediscommander/redis-commander:latest
@@ -111,7 +138,6 @@ services:
       - redis_4
       - redis_5
       - redis_6
-      - cluster_initiator
     networks:
       redis_cluster_network:
         ipv4_address: 174.10.0.9
