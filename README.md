@@ -2,7 +2,16 @@
 این پروژه از Docker Compose برای راه‌اندازی یک Redis Cluster با 6 گره استفاده می‌کند، که شامل 3 گره Master و 3 گره Replica است. سرویس‌ها شامل redis_1 تا redis_6  و cluster_initiator برای ایجاد کلاستر هستند. پس از راه‌اندازی، خوشه با دستور redis-cli --cluster create پیکربندی می‌شود. همچنین، سرویس redis_commander برای مدیریت و مشاهده داده‌ها از طریق رابط وب در پورت 5050 در دسترس است. این پروژه برای راه‌اندازی و مدیریت Redis Cluster به صورت خودکار طراحی شده است.
 
 
+## docker swarm 
+## Create cluster initiator for docker swarm 
+```
+docker build -t redis-cluster-initiator:latest -f Dockerfile .
+```
 
+## deploy stack 
+```
+docker stack deploy -c docker-compose.yml redis-cluster
+```
 
 
 
