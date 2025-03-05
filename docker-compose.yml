@@ -7,11 +7,12 @@ services:
       - "6381:6379"
     volumes:
       - redis_1_data:/data
-      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    configs:
+      - source: redis_conf
+        target: /usr/local/etc/redis/redis.conf
     command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     networks:
-      redis_cluster_network:
-        ipv4_address: 174.10.0.2
+      - redis_cluster_network
     deploy:
       placement:
         constraints:
@@ -23,11 +24,12 @@ services:
       - "6382:6379"
     volumes:
       - redis_2_data:/data
-      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    configs:
+      - source: redis_conf
+        target: /usr/local/etc/redis/redis.conf
     command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     networks:
-      redis_cluster_network:
-        ipv4_address: 174.10.0.3
+      - redis_cluster_network
     deploy:
       placement:
         constraints:
@@ -39,11 +41,12 @@ services:
       - "6383:6379"
     volumes:
       - redis_3_data:/data
-      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    configs:
+      - source: redis_conf
+        target: /usr/local/etc/redis/redis.conf
     command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     networks:
-      redis_cluster_network:
-        ipv4_address: 174.10.0.4
+      - redis_cluster_network
     deploy:
       placement:
         constraints:
@@ -55,11 +58,12 @@ services:
       - "6384:6379"
     volumes:
       - redis_4_data:/data
-      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    configs:
+      - source: redis_conf
+        target: /usr/local/etc/redis/redis.conf
     command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     networks:
-      redis_cluster_network:
-        ipv4_address: 174.10.0.5
+      - redis_cluster_network
     deploy:
       placement:
         constraints:
@@ -71,11 +75,12 @@ services:
       - "6385:6379"
     volumes:
       - redis_5_data:/data
-      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    configs:
+      - source: redis_conf
+        target: /usr/local/etc/redis/redis.conf
     command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     networks:
-      redis_cluster_network:
-        ipv4_address: 174.10.0.6
+      - redis_cluster_network
     deploy:
       placement:
         constraints:
@@ -87,11 +92,12 @@ services:
       - "6386:6379"
     volumes:
       - redis_6_data:/data
-      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    configs:
+      - source: redis_conf
+        target: /usr/local/etc/redis/redis.conf
     command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     networks:
-      redis_cluster_network:
-        ipv4_address: 174.10.0.7
+      - redis_cluster_network
     deploy:
       placement:
         constraints:
@@ -113,98 +119,94 @@ services:
 
       placement:
         constraints:
-          - node.hostname == node1  # Place on Node 3, same as redis_5 (master)
+          - node.hostname == node1
     networks:
       redis_cluster_network:
         ipv4_address: 174.10.0.8
 
-  redis_exporter:
-    image: docker.arvancloud.ir/oliver006/redis_exporter:latest
-    ports:
-      - "9121:9121"
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == node1  # Place on Node 3
+  # redis_exporter:
+  #   image: docker.arvancloud.ir/oliver006/redis_exporter:latest
+  #   ports:
+  #     - "9121:9121"
+  #   deploy:
+  #     placement:
+  #       constraints:
+  #         - node.hostname == node1  # Place on Node 3
 
-    command:
-      - '--redis.addr=redis://redis_1:6379'
-      - '--redis.addr=redis://redis_2:6379'
-      - '--redis.addr=redis://redis_3:6379'
-      - '--redis.addr=redis://redis_4:6379'
-      - '--redis.addr=redis://redis_5:6379'
-      - '--redis.addr=redis://redis_6:6379'
-      - '--is-cluster=true'
-    networks:
-      redis_cluster_network:
-        ipv4_address: 174.10.0.10
-  redis_commander:
-    image: docker.arvancloud.ir/rediscommander/redis-commander:latest
-    environment:
-      REDIS_HOSTS: "local:redis_1:6379,local:redis_2:6379,local:redis_3:6379,local:redis_4:6379,local:redis_5:6379,local:redis_6:6379"
-    ports:
-      - "5050:8081"
-    depends_on:
-      - redis_1
-      - redis_2
-      - redis_3
-      - redis_4
-      - redis_5
-      - redis_6
-      - cluster_initiator
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == node1  # Place on Node 3, same as redis_5 (master)
+  #   command:
+  #     - '--redis.addr=redis://redis_1:6379'
+  #     - '--redis.addr=redis://redis_2:6379'
+  #     - '--redis.addr=redis://redis_3:6379'
+  #     - '--redis.addr=redis://redis_4:6379'
+  #     - '--redis.addr=redis://redis_5:6379'
+  #     - '--redis.addr=redis://redis_6:6379'
+  #     - '--is-cluster=true'
+  #   networks:
+  #     redis_cluster_network:
+  #       ipv4_address: 174.10.0.10
+  # redis_commander:
+  #   image: docker.arvancloud.ir/rediscommander/redis-commander:latest
+  #   environment:
+  #     REDIS_HOSTS: "local:redis_1:6379,local:redis_2:6379,local:redis_3:6379,local:redis_4:6379,local:redis_5:6379,local:redis_6:6379"
+  #   ports:
+  #     - "5050:8081"
+  #   depends_on:
+  #     - redis_1
+  #     - redis_2
+  #     - redis_3
+  #     - redis_4
+  #     - redis_5
+  #     - redis_6
+  #     - cluster_initiator
+  #   deploy:
+  #     placement:
+  #       constraints:
+  #         - node.hostname == node1  # Place on Node 3, same as redis_5 (master)
 
-    networks:
-      redis_cluster_network:
-        ipv4_address: 174.10.0.9
-  prometheus:
-    image: docker.arvancloud.ir/prom/prometheus:latest
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus_data:/prometheus
-    ports:
-      - "9090:9090"
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == node1 # Place on Node 3
+  #   networks:
+  #     redis_cluster_network:
+  #       ipv4_address: 174.10.0.9
+  # prometheus:
+  #   image: docker.arvancloud.ir/prom/prometheus:latest
+  #   volumes:
+  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  #     - prometheus_data:/prometheus
+  #   ports:
+  #     - "9090:9090"
+  #   deploy:
+  #     placement:
+  #       constraints:
+  #         - node.hostname == node1 # Place on Node 3
 
-    networks:
-      redis_cluster_network:
-        ipv4_address: 174.10.0.11
+  #   networks:
+  #     redis_cluster_network:
+  #       ipv4_address: 174.10.0.11
 
-  grafana:
-    image: docker.arvancloud.ir/grafana/grafana:latest
-    volumes:
-      - grafana_data5:/var/lib/grafana
-      - ./grafana/provisioning:/etc/grafana/provisioning  # Auto-configuration
-    ports:
-      - "3000:3000"
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == node1  # Place on Node 3
+  # grafana:
+  #   image: docker.arvancloud.ir/grafana/grafana:latest
+  #   volumes:
+  #     - grafana_data5:/var/lib/grafana
+  #     - ./grafana/provisioning:/etc/grafana/provisioning  # Auto-configuration
+  #   ports:
+  #     - "3000:3000"
+  #   deploy:
+  #     placement:
+  #       constraints:
+  #         - node.hostname == node1  # Place on Node 3
 
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_USERS_ALLOW_SIGN_UP=false
-    depends_on:
-      - prometheus
-    networks:
-      redis_cluster_network:
-        ipv4_address: 174.10.0.12
+  #   environment:
+  #     - GF_SECURITY_ADMIN_PASSWORD=admin
+  #     - GF_SECURITY_ADMIN_USER=admin
+  #     - GF_USERS_ALLOW_SIGN_UP=false
+  #   depends_on:
+  #     - prometheus
+  #   networks:
+  #     redis_cluster_network:
+  #       ipv4_address: 174.10.0.12
 
 networks:
   redis_cluster_network:
-    driver: overlay  # Updated to overlay for multi-node communication
-    ipam:
-      driver: default
-      config:
-        - subnet: 174.10.0.0/16
+    external: true
 
 volumes:
   redis_1_data: {}
