@@ -7,6 +7,8 @@
 ```
 docker build -t redis-cluster-initiator:latest -f Dockerfile .
 ```
+## define config file
+define a config in portianer name redis_conf and copy the redis.conf there
 
 ## deploy stack 
 ```
@@ -54,5 +56,14 @@ memtier_benchmark \
   --ratio=1:0 \
   --threads=4 \
   --rate-limiting=10000 \
+
+```
+
+
+```
+ 
+  docker run --rm --network redis_cluster_network redislabs/memtier_benchmark \
+  memtier_benchmark --server=redis-test_redis_1 \
+  --port=6379 --cluster-mode --test-time=60 --threads=4 --clients=50 --pipeline=10
 
 ```

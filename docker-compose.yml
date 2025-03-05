@@ -3,8 +3,6 @@ version: '3.8'
 services:
   redis_1:
     image: "docker.arvancloud.ir/redis:latest"
-    ports:
-      - "6381:6379"
     volumes:
       - redis_1_data:/data
     configs:
@@ -20,8 +18,6 @@ services:
 
   redis_2:
     image: "docker.arvancloud.ir/redis:latest"
-    ports:
-      - "6382:6379"
     volumes:
       - redis_2_data:/data
     configs:
@@ -37,8 +33,6 @@ services:
 
   redis_3:
     image: "docker.arvancloud.ir/redis:latest"
-    ports:
-      - "6383:6379"
     volumes:
       - redis_3_data:/data
     configs:
@@ -54,8 +48,6 @@ services:
 
   redis_4:
     image: "docker.arvancloud.ir/redis:latest"
-    ports:
-      - "6384:6379"
     volumes:
       - redis_4_data:/data
     configs:
@@ -71,8 +63,6 @@ services:
 
   redis_5:
     image: "docker.arvancloud.ir/redis:latest"
-    ports:
-      - "6385:6379"
     volumes:
       - redis_5_data:/data
     configs:
@@ -88,8 +78,6 @@ services:
 
   redis_6:
     image: "docker.arvancloud.ir/redis:latest"
-    ports:
-      - "6386:6379"
     volumes:
       - redis_6_data:/data
     configs:
@@ -121,8 +109,7 @@ services:
         constraints:
           - node.hostname == node1
     networks:
-      redis_cluster_network:
-        ipv4_address: 174.10.0.8
+      - redis_cluster_network
 
   # redis_exporter:
   #   image: docker.arvancloud.ir/oliver006/redis_exporter:latest
@@ -206,6 +193,10 @@ services:
 
 networks:
   redis_cluster_network:
+    external: true
+
+configs:
+  redis_conf:
     external: true
 
 volumes:
