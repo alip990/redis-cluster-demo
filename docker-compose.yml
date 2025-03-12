@@ -8,7 +8,11 @@ services:
     configs:
       - source: redis_conf
         target: /usr/local/etc/redis/redis.conf
-    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    command: >
+      sh -c "EXTERNAL_IP=$(hostname -i | awk '{print \$1}') &&
+      EXTERNAL_PORT=${REDIS_EXTERNAL_PORT:-6379} &&
+      echo 'Starting Redis with replica announce IP: ${EXTERNAL_IP} and port: ${EXTERNAL_PORT}' &&
+      exec redis-server /usr/local/etc/redis/redis.conf --replica-announce-ip ${EXTERNAL_IP} --replica-announce-port ${EXTERNAL_PORT}"
     networks:
       - redis_cluster_network
     deploy:
@@ -23,7 +27,11 @@ services:
     configs:
       - source: redis_conf
         target: /usr/local/etc/redis/redis.conf
-    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    command: >
+      sh -c "EXTERNAL_IP=$(hostname -i | awk '{print \$1}') &&
+      EXTERNAL_PORT=${REDIS_EXTERNAL_PORT:-6379} &&
+      echo 'Starting Redis with replica announce IP: ${EXTERNAL_IP} and port: ${EXTERNAL_PORT}' &&
+      exec redis-server /usr/local/etc/redis/redis.conf --replica-announce-ip ${EXTERNAL_IP} --replica-announce-port ${EXTERNAL_PORT}"
     networks:
       - redis_cluster_network
     deploy:
@@ -38,7 +46,11 @@ services:
     configs:
       - source: redis_conf
         target: /usr/local/etc/redis/redis.conf
-    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    command: >
+      sh -c "EXTERNAL_IP=$(hostname -i | awk '{print \$1}') &&
+      EXTERNAL_PORT=${REDIS_EXTERNAL_PORT:-6379} &&
+      echo 'Starting Redis with replica announce IP: ${EXTERNAL_IP} and port: ${EXTERNAL_PORT}' &&
+      exec redis-server /usr/local/etc/redis/redis.conf --replica-announce-ip ${EXTERNAL_IP} --replica-announce-port ${EXTERNAL_PORT}"
     networks:
       - redis_cluster_network
     deploy:
@@ -53,7 +65,11 @@ services:
     configs:
       - source: redis_conf
         target: /usr/local/etc/redis/redis.conf
-    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    command: >
+      sh -c "EXTERNAL_IP=$(hostname -i | awk '{print \$1}') &&
+      EXTERNAL_PORT=${REDIS_EXTERNAL_PORT:-6379} &&
+      echo 'Starting Redis with replica announce IP: ${EXTERNAL_IP} and port: ${EXTERNAL_PORT}' &&
+      exec redis-server /usr/local/etc/redis/redis.conf --replica-announce-ip ${EXTERNAL_IP} --replica-announce-port ${EXTERNAL_PORT}"
     networks:
       - redis_cluster_network
     deploy:
@@ -68,7 +84,11 @@ services:
     configs:
       - source: redis_conf
         target: /usr/local/etc/redis/redis.conf
-    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    command: >
+      sh -c "EXTERNAL_IP=$(hostname -i | awk '{print \$1}') &&
+      EXTERNAL_PORT=${REDIS_EXTERNAL_PORT:-6379} &&
+      echo 'Starting Redis with replica announce IP: ${EXTERNAL_IP} and port: ${EXTERNAL_PORT}' &&
+      exec redis-server /usr/local/etc/redis/redis.conf --replica-announce-ip ${EXTERNAL_IP} --replica-announce-port ${EXTERNAL_PORT}"
     networks:
       - redis_cluster_network
     deploy:
@@ -83,7 +103,11 @@ services:
     configs:
       - source: redis_conf
         target: /usr/local/etc/redis/redis.conf
-    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    command: >
+      sh -c "EXTERNAL_IP=$(hostname -i | awk '{print \$1}') &&
+      EXTERNAL_PORT=${REDIS_EXTERNAL_PORT:-6379} &&
+      echo 'Starting Redis with replica announce IP: ${EXTERNAL_IP} and port: ${EXTERNAL_PORT}' &&
+      exec redis-server /usr/local/etc/redis/redis.conf --replica-announce-ip ${EXTERNAL_IP} --replica-announce-port ${EXTERNAL_PORT}"
     networks:
       - redis_cluster_network
     deploy:
